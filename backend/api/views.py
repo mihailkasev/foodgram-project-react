@@ -1,19 +1,18 @@
-from datetime import datetime
-
-from django.http import HttpResponse
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
-from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
-                            Recipe, Tag)
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from users.models import Subscription, User
+from djoser.views import UserViewSet
+from datetime import datetime
 
+from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
+                            Recipe, Tag)
+from users.models import Subscription, User
 from .filters import IngredientFilter, RecipeFilterSet
 from .permissions import AdminOrReadOnly, RecipePermission
 from .serializers import (CartSerializer, FavoriteSerializer,
@@ -47,47 +46,32 @@ class RecipeViewSet(ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    @action(methods=['post', 'delete'], detail=True)
-    def favorite(self, request, pk):
+    def additions(self, request, pk, model, modelserializer):
         if request.method != 'POST':
-            favorite = get_object_or_404(
-                Favorite,
+            action_model = get_object_or_404(
+                model,
                 user=request.user,
                 recipe=get_object_or_404(Recipe, pk=pk)
             )
-            self.perform_destroy(favorite)
+            self.perform_destroy(action_model)
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = FavoriteSerializer(
+        serializer = modelserializer(
             data={
                 'user': request.user.id,
                 'recipe': get_object_or_404(Recipe, pk=pk).pk
             },
             context={'request': request}
         )
-        serializer.is_valid()
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post', 'delete'], detail=True)
+    def favorite(self, request, pk):
+        return self.additions(request, pk, Favorite, FavoriteSerializer)
+
+    @action(methods=['post', 'delete'], detail=True)
     def shopping_cart(self, request, pk):
-        if request.method != 'POST':
-            shopping_cart = get_object_or_404(
-                Cart,
-                user=request.user,
-                recipe=get_object_or_404(Recipe, pk=pk)
-            )
-            self.perform_destroy(shopping_cart)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = CartSerializer(
-            data={
-                'user': request.user.id,
-                'recipe': get_object_or_404(Recipe, pk=pk).pk
-            },
-            context={'request': request}
-        )
-        serializer.is_valid()
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.additions(request, pk, Cart, CartSerializer)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
@@ -96,7 +80,7 @@ class RecipeViewSet(ModelViewSet):
         ).values(
             'ingredient__name',
             'ingredient__measurement_unit'
-        ).annotate(amount=Sum('amount'))
+        ).annotate(quantity=Sum('amount'))
 
         today = datetime.today()
         shopping = (
@@ -106,7 +90,7 @@ class RecipeViewSet(ModelViewSet):
         shopping += '\n'.join([
             f'- {ingredient["ingredient__name"]} '
             f'({ingredient["ingredient__measurement_unit"]})'
-            f' - {ingredient["amount"]}'
+            f' - {ingredient["quantity"]}'
             for ingredient in ingredients
         ])
         filename = f'{request.user.username}_shopping.txt'

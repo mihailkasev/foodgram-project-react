@@ -3,12 +3,22 @@ from django.db import models
 from django.db.models import F, Q
 
 
-class User(AbstractUser):
+class UserRole:
+    User = 'user'
+    Admin = 'admin'
     ROLES = (
-        ('user', 'Авторизованный пользователь'),
-        ('admin', 'Администратор'),
+        (User, 'Авторизованный пользователь'),
+        (Admin, 'Администратор'),
     )
-    role = models.CharField(max_length=16, choices=ROLES, default='user')
+
+
+class User(AbstractUser):
+
+    role = models.CharField(
+        max_length=16,
+        choices=UserRole.ROLES,
+        default=UserRole.User
+    )
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)

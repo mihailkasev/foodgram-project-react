@@ -1,6 +1,8 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+
 from users.models import User
+
 
 NUMBER_LIST = 6
 
@@ -68,7 +70,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='tags',
+        related_name='recipes',
         verbose_name='Тэг'
     )
     cooking_time = models.PositiveSmallIntegerField(
@@ -103,7 +105,6 @@ class IngredientInRecipe(models.Model):
         verbose_name='Рецепт'
     )
     amount = models.IntegerField(
-        # default=1,
         validators=[MinValueValidator(1)],
         verbose_name='Количество ингредиента'
     )
@@ -119,6 +120,7 @@ class IngredientInRecipe(models.Model):
                 name='amount_gte_1'),
         )
         verbose_name = 'Ингредиент в рецепте'
+        verbose_name_plural = 'Ингредиенты в рецепте'
 
     def __str__(self):
         return f'{self.ingredient} в {self.recipe} - {self.amount}'

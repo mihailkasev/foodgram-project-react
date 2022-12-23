@@ -1,13 +1,14 @@
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserSerializer
-from drf_base64.fields import Base64ImageField
-from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
-                            Recipe, Tag)
 from rest_framework import serializers
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         UniqueTogetherValidator,
                                         ValidationError)
+from djoser.serializers import UserSerializer
+from drf_base64.fields import Base64ImageField
+
+from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
+                            Recipe, Tag)
 from users.models import Subscription, User
 
 
@@ -114,7 +115,7 @@ class RecipeWriteSerializer(ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
-    image = Base64ImageField(use_url=True)
+    image = Base64ImageField(use_url=True, required=False)
     author = UserSerializer(read_only=True)
 
     class Meta:
@@ -139,11 +140,11 @@ class RecipeWriteSerializer(ModelSerializer):
         )
 
     def validate(self, data):
-        if self.initial_data.get('ingredients'):
-            ingredients = self.initial_data['ingredients']
+        if data.get('ingredients'):
+            ingredients = data.get('ingredients')
             ingredients_list = []
             for ingredient in ingredients:
-                ingredient_id = ingredient['id']
+                ingredient_id = ingredient.get('id')
                 if ingredient_id in ingredients_list:
                     raise ValidationError(
                         'Подобный ингридиент уже имеется в рецепте.'
@@ -270,14 +271,19 @@ class SubscriptionSerializer(ModelSerializer):
         fields = ('user', 'author')
 
     def validate(self, data):
-        get_object_or_404(User, username=data['author'])
+        get_object_or_404(User, username=data.get('author'))
         if Subscription.objects.filter(
             user=self.context['request'].user,
-            author=data['author']
+            author=data.get('author')
         ).exists():
-            return ValidationError('Подписка существует.')
-        if self.context['request'].user == data['author']:
-            return ValidationError('Подписка на самого себя невозможна')
+            raise ValidationError(
+                {'Subscription_exists_error': 'Подписка существует.'}
+            )
+        if self.context['request'].user == data.get('author'):
+            raise ValidationError(
+                {'SelfSubscription_error':
+                    'Подписка на самого себя невозможна'}
+            )
         return data
 
     def to_representation(self, instance):
@@ -297,9 +303,11 @@ class FavoriteSerializer(ModelSerializer):
         if not request or request.user.is_anonymous:
             return False
         if Favorite.objects.filter(
-            user=request.user, recipe=data['recipe']
+            user=request.user, recipe=data.get('recipe')
         ).exists():
-            return ValidationError('Рецепт уже в избранном.')
+            raise ValidationError(
+                {'Favorite_exists_error': 'Рецепт уже в избранном.'}
+            )
         return data
 
     def to_representation(self, instance):
@@ -320,9 +328,11 @@ class CartSerializer(ModelSerializer):
         if not request or request.user.is_anonymous:
             return False
         if Cart.objects.filter(
-            user=request.user, recipe=data['recipe']
+            user=request.user, recipe=data.get('recipe')
         ).exists():
-            return ValidationError('Рецепт уже находится в корзине')
+            raise ValidationError(
+                {'Cart_exists_error': 'Рецепт уже находится в корзине'}
+            )
         return data
 
     def to_representation(self, instance):
