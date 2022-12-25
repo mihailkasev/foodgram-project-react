@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default=' ')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*', '51.250.86.76']
+ALLOWED_HOSTS = ['*', '158.160.49.248']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -95,13 +95,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
+STATIC_URL = '/backend-static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'backend-static/')
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/backend-media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'backend-media/')
 
 AUTH_USER_MODEL = 'users.User'
 
