@@ -2,15 +2,16 @@ import os
 
 from dotenv import load_dotenv
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY', default=' ')
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*', '158.160.49.248']
+ALLOWED_HOSTS = ['158.160.49.248', 'whatsupdoggy.sytes.net', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -25,7 +26,8 @@ INSTALLED_APPS = [
     'django_filters',
     'api',
     'recipes',
-    'users'
+    'users',
+    'colorfield'
 ]
 
 MIDDLEWARE = [
@@ -62,11 +64,11 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.getenv('DB_NAME'),
+        'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT')
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT')
     }
 }
 
@@ -89,19 +91,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'Europe/Moscow'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_L10N = True
 
 STATIC_URL = '/backend-static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'backend-static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'backend-static')
 
 MEDIA_URL = '/backend-media/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'backend-media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'backend-media')
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -117,17 +117,18 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE_QUERY_PARAM': 'limit',
     'PAGE_SIZE': 6,
 }
 
 DJOSER = {
     'HIDE_USERS': False,
-    'SERIALIZERS': {
-        'user': 'api.serializers.UsersSerializer',
-        'current_user': 'api.serializers.UsersSerializer',
-    },
     'PERMISSIONS': {
         'user_list': ['rest_framework.permissions.AllowAny'],
-        'user': ['rest_framework.permissions.AllowAny'],
+        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly']
+    },
+    "SERIALIZERS": {
+        "user": "api.serializers.UsersSerializer",
+        "current_user": "api.serializers.UsersSerializer",
     },
 }

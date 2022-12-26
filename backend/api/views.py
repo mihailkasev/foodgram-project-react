@@ -13,7 +13,7 @@ from datetime import datetime
 from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
                             Recipe, Tag)
 from users.models import Subscription, User
-from .filters import IngredientFilter, RecipeFilterSet
+from .filters import IngredientSearchFilter, RecipeFilterSet
 from .permissions import AdminOrReadOnly, RecipePermission
 from .serializers import (CartSerializer, FavoriteSerializer,
                           IngredientSerializer, RecipeReadSerializer,
@@ -25,14 +25,16 @@ class IngredientViewSet(ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = [AdminOrReadOnly]
-    filter_backends = (IngredientFilter,)
+    filter_backends = (IngredientSearchFilter,)
     search_fields = ('^name',)
+    pagination_class = None
 
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     permission_classes = [AdminOrReadOnly]
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
@@ -62,6 +64,7 @@ class RecipeViewSet(ModelViewSet):
             },
             context={'request': request}
         )
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

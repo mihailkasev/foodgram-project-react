@@ -4,7 +4,7 @@ from .models import Cart, Favorite, Ingredient, IngredientInRecipe, Recipe, Tag
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'measurement_unit')
+    list_display = ('id', 'name', 'measurement_unit')
     list_filter = ('name',)
 
 
@@ -20,9 +20,13 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 
+class IngredientInRecipeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'recipe')
+
+
 admin.site.register(Favorite)
 admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(IngredientInRecipe)
+admin.site.register(IngredientInRecipe, IngredientInRecipeAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Cart)
