@@ -13,7 +13,7 @@ services:
     volumes:
       - foodgram_data:/var/lib/postgresql/data/
     env_file:
-      - ../backend/foodgram/.env
+      - ./.env
 
   backend:
     image: mihailkasev/infra_backend:latest
