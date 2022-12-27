@@ -1,18 +1,19 @@
+from datetime import datetime
+
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
+from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
+                            Recipe, Tag)
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from djoser.views import UserViewSet
-from datetime import datetime
-
-from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
-                            Recipe, Tag)
 from users.models import Subscription, User
+
 from .filters import IngredientSearchFilter, RecipeFilterSet
 from .permissions import AdminOrReadOnly, RecipePermission
 from .serializers import (CartSerializer, FavoriteSerializer,
