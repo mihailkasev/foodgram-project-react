@@ -24,7 +24,7 @@ services:
     depends_on:
       - postgres
     env_file:
-      - ../backend/foodgram/.env
+      - ./.env
 
   nginx:
     image: nginx:1.19.3
