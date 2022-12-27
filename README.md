@@ -62,4 +62,4 @@ docker-compose exec web python manage.py load_ingredients
 1) email = admin@gmail.com
 2) password = admin
 ### Автор:
-- [Михаил Касев](https://github.com/mihailkasev/)** - создание api, деплой.
+- [Михаил Касев](https://github.com/mihailkasev/) - создание api, деплой.
