@@ -8,7 +8,7 @@ load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY', default=' ')
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['158.160.49.248', 'whatsupdoggy.sytes.net', 'localhost']
 
