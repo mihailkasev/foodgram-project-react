@@ -1,13 +1,12 @@
 from django.db import transaction
 from django.db.models import F
-
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
+from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         UniqueTogetherValidator,
                                         ValidationError)
-from drf_base64.fields import Base64ImageField
 
 from recipes.models import (Cart, Favorite, Ingredient, IngredientInRecipe,
                             Recipe, Tag)
