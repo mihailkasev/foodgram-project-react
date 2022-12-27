@@ -231,9 +231,9 @@ class SubscriptionListSerializer(ModelSerializer):
                 many=True, context={'request': request}
             ).data
         return ShortRecipe(
-                Recipe.objects.filter(author=author)[:int(recipes_limit)],
-                many=True, context={'request': request}
-            ).data
+            Recipe.objects.filter(author=author)[:int(recipes_limit)],
+            many=True, context={'request': request}
+        ).data
 
     def get_recipes_count(self, author):
         return Recipe.objects.filter(author=author).count()
