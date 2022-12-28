@@ -72,7 +72,7 @@ jobs:
           script: |
             cd foodgram-infra
             sudo docker-compose down
-            sudo docker pull mihailkasev/infra-backend:latest
+            sudo docker pull mihailkasev/infra_backend:latest
             touch .env
             echo SECRET_KEY='${{ secrets.SECRET_KEY }}' >> .env 
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
