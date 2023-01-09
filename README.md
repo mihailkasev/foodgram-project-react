@@ -57,7 +57,5 @@ docker-compose exec web python manage.py load_ingredients
 4) http://localhost/api/ - API проекта;
 5) http://localhost/api/docs/redoc.html - документация к API;
 
-### Сайт http://whatsupdoggy.sytes.net/
-
 ### Автор:
 - [Михаил Касев](https://github.com/mihailkasev/) - создание api, деплой.
