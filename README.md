@@ -13,9 +13,7 @@
 - gunicorn==20.0.4
 - psycopg2-binary==2.8.6
 
-### Бейдж
-
-https://github.com/mihailkasev/foodgram-project-react/actions/workflows/foodgram.yml/badge.svg
+![foodgram](https://github.com/mihailkasev/foodgram-project-react/actions/workflows/foodgram.yml/badge.svg)
 
 ### Запуск проекта 
 - Клонируйте репозиторий:
