@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default=' ')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['158.160.49.248', 'whatsupdoggy.sytes.net', 'localhost']
+ALLOWED_HOSTS = ['158.160.38.69', 'whatsupdoggy.sytes.net', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
