@@ -13,9 +13,7 @@
 - gunicorn==20.0.4
 - psycopg2-binary==2.8.6
 
-### Бейдж
-
-https://github.com/mihailkasev/foodgram-project-react/actions/workflows/foodgram.yml/badge.svg
+![foodgram](https://github.com/mihailkasev/foodgram-project-react/actions/workflows/foodgram.yml/badge.svg)
 
 ### Запуск проекта 
 - Клонируйте репозиторий:
@@ -57,9 +55,5 @@ docker-compose exec web python manage.py load_ingredients
 4) http://localhost/api/ - API проекта;
 5) http://localhost/api/docs/redoc.html - документация к API;
 
-### Сайт http://whatsupdoggy.sytes.net/
-- admin:
-1) email = admin@gmail.com
-2) password = admin
 ### Автор:
 - [Михаил Касев](https://github.com/mihailkasev/) - создание api, деплой.
