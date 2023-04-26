@@ -35,19 +35,19 @@ docker-compose up -d --build
 ```
 - Запустить миграции:
 ```
-docker-compose exec web python manage.py migrate
+docker-compose exec backend python manage.py migrate
 ```
 - Создать суперпользователя:
 ```
-docker-compose exec web python manage.py createsuperuser
+docker-compose exec backend python manage.py createsuperuser
 ```
 - Собрать статику:
 ```
-docker-compose exec web python manage.py collectstatic --no-input
+docker-compose exec backend python manage.py collectstatic --no-input
 ```
 - Загрузить ингредиенты:
 ```
-docker-compose exec web python manage.py load_ingredients
+docker-compose exec backend python manage.py load_ingredients
 ```
 - Адреса сайта:
 1) http://localhost/ - главная страница;
